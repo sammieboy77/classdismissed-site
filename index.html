@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="description" content="ClassDismissed migrates your Teachable school to Podia. Review the finished rebuild before you pay." />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,500;6..72,600&amp;display=swap" rel="stylesheet" />
+  <title>ClassDismissed — Teachable School Migration</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --page: #f7f8f5;
+      --surface: #ffffff;
+      --surface-muted: #eef2ed;
+      --ink: #17201c;
+      --muted: #53625a;
+      --line: #d8e0da;
+      --dark: #101713;
+      --dark-2: #18231d;
+      --on-dark: #f3f7f3;
+      --on-dark-muted: #b9c8bf;
+      --accent: #38d179;
+      --accent-strong: #1eb865;
+      --accent-ink: #092b1a;
+      --accent-soft: #dff8e8;
+      --warning: #ffd178;
+      --shadow: 0 20px 60px rgba(22, 40, 29, .10);
+      --radius-sm: 10px;
+      --radius-md: 18px;
+      --radius-lg: 28px;
+      --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+      --font-display: "Newsreader", Georgia, serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --page: #0d120f;
+        --surface: #151d18;
+        --surface-muted: #1b261f;
+        --ink: #eff5f0;
+        --muted: #b2c0b7;
+        --line: #2b3a31;
+        --dark: #080d0a;
+        --dark-2: #121b16;
+        --on-dark: #f3f7f3;
+        --on-dark-muted: #b9c8bf;
+        --accent: #45db82;
+        --accent-strong: #31c973;
+        --accent-ink: #071a10;
+        --accent-soft: #163522;
+        --warning: #ffd178;
+        --shadow: 0 20px 60px rgba(0, 0, 0, .28);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    a { color: inherit; }
+    .container { width: min(1160px, calc(100% - 40px)); margin-inline: auto; }
+    .section { padding: 104px 0; }
+    .section-head { max-width: 720px; margin-bottom: 52px; }
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 14px;
+      color: var(--accent-strong);
+      font-weight: 700;
+      font-size: .83rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .section-label::before { content: ""; width: 24px; height: 2px; background: currentColor; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2 { font-family: var(--font-display); letter-spacing: -.025em; line-height: 1.02; }
+    h1 { font-size: clamp(3.25rem, 7vw, 6.6rem); font-weight: 500; max-width: 920px; margin-bottom: 30px; }
+    h2 { font-size: clamp(2.35rem, 4.4vw, 4.35rem); font-weight: 500; margin-bottom: 18px; }
+    h3 { line-height: 1.25; font-size: 1.2rem; }
+    .lead { font-size: clamp(1.08rem, 1.6vw, 1.27rem); color: var(--muted); max-width: 680px; }
+
+    .button {
+      min-height: 52px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 22px;
+      border: 0;
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+      color: var(--accent-ink);
+      text-decoration: none;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s ease, transform .2s ease;
+    }
+    .button:hover { background: var(--accent-strong); transform: translateY(-1px); }
+    .button:focus-visible, .faq-question:focus-visible, .nav-toggle:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid var(--warning); outline-offset: 3px; }
+    .button svg { width: 18px; height: 18px; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      color: var(--on-dark);
+      background: var(--dark);
+      min-height: 840px;
+      border-radius: 0 0 44px 44px;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 72px 72px,
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 72px 72px;
+      mask-image: linear-gradient(to bottom, black, transparent 92%);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      right: -260px;
+      top: 170px;
+      border: 1px solid rgba(69,219,130,.24);
+      border-radius: 50%;
+      box-shadow: 0 0 0 80px rgba(69,219,130,.025), 0 0 0 160px rgba(69,219,130,.02);
+    }
+    .nav {
+      position: relative;
+      z-index: 5;
+      height: 86px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+      border-bottom: 1px solid rgba(255,255,255,.11);
+    }
+    .wordmark { font-family: var(--font-display); font-size: 1.65rem; font-weight: 600; text-decoration: none; letter-spacing: -.02em; }
+    .wordmark span { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 30px; }
+    .nav-links > a:not(.button) { color: var(--on-dark-muted); text-decoration: none; font-size: .94rem; font-weight: 600; }
+    .nav-links > a:not(.button):hover { color: var(--on-dark); }
+    .nav .button { min-height: 44px; padding: 10px 17px; }
+
+    .hero-inner { position: relative; z-index: 2; padding: 98px 0 110px; }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(69,219,130,.28);
+      background: rgba(69,219,130,.08);
+      color: #9df1bc;
+      border-radius: 999px;
+      padding: 7px 13px;
+      font-size: .84rem;
+      font-weight: 700;
+      margin-bottom: 28px;
+    }
+    .hero-kicker::before { content: ""; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 0 5px rgba(69,219,130,.12); }
+    .hero h1 .price { color: var(--accent); white-space: nowrap; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 72px; align-items: end; }
+    .hero-copy { max-width: 760px; }
+    .hero-copy > p { color: var(--on-dark-muted); font-size: clamp(1.1rem, 1.7vw, 1.3rem); max-width: 760px; margin-bottom: 34px; }
+    .hero-actions { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+    .hero-trust { margin: 0; color: var(--on-dark-muted); font-size: .91rem; display: flex; align-items: center; gap: 9px; }
+    .hero-trust svg { width: 18px; height: 18px; color: var(--accent); flex: 0 0 auto; }
+    .hero-proof { border-top: 1px solid rgba(255,255,255,.15); padding-top: 22px; }
+    .proof-item { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: center; padding: 14px 0; }
+    .proof-number { width: 31px; height: 31px; display: grid; place-items: center; border: 1px solid rgba(69,219,130,.45); color: var(--accent); border-radius: 50%; font-size: .8rem; font-weight: 700; }
+    .proof-item strong { display: block; font-size: .94rem; }
+    .proof-item span { color: var(--on-dark-muted); font-size: .82rem; }
+
+    .founder-note { padding: 30px 0; border-bottom: 1px solid var(--line); }
+    .founder-note p { margin: 0; max-width: 860px; color: var(--muted); font-size: 1.05rem; }
+    .founder-note strong { color: var(--ink); }
+
+    .nav-toggle { display: none; width: 44px; height: 44px; align-items: center; justify-content: center; background: transparent; border: 1px solid rgba(255,255,255,.25); border-radius: var(--radius-sm); color: var(--on-dark); cursor: pointer; flex: 0 0 auto; }
+    .nav-toggle svg { width: 22px; height: 22px; }
+
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .step { padding: 42px 42px 46px; border-right: 1px solid var(--line); }
+    .step:first-child { padding-left: 0; }
+    .step:last-child { border-right: 0; padding-right: 0; }
+    .step-num { font-family: var(--font-display); font-size: 2.2rem; color: var(--accent-strong); line-height: 1; margin-bottom: 52px; }
+    .step h3 { font-size: 1.22rem; margin-bottom: 12px; }
+    .step p { color: var(--muted); margin-bottom: 0; }
+
+    .pricing-section { background: var(--surface-muted); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .pricing-head-row { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 48px; }
+    .pricing-head-row .section-head { margin: 0; }
+    .pricing-note { max-width: 320px; color: var(--muted); margin: 0 0 4px; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .price-card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 34px;
+      min-height: 310px;
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+    }
+    .price-card.featured { background: var(--dark); color: var(--on-dark); border-color: var(--dark); box-shadow: var(--shadow); }
+    .price-card.featured::before { content: ""; position: absolute; inset: 0 0 auto; height: 5px; border-radius: var(--radius-md) var(--radius-md) 0 0; background: var(--accent); }
+    .price-topline { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 27px; }
+    .tier { font-weight: 700; }
+    .spots { padding: 5px 9px; background: var(--accent); color: var(--accent-ink); border-radius: 999px; font-weight: 700; font-size: .72rem; }
+    .price { font-family: var(--font-display); font-size: 4.2rem; line-height: 1; margin: 42px 0 6px; letter-spacing: -.04em; }
+    .price-sub { color: var(--muted); margin-bottom: auto; }
+    .featured .price-sub { color: var(--on-dark-muted); }
+    .price-foot { padding-top: 26px; margin: 28px 0 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+    .featured .price-foot { border-color: rgba(255,255,255,.15); color: var(--on-dark-muted); }
+    .door-strip { margin-top: 18px; display: flex; align-items: center; gap: 26px; background: var(--dark); color: var(--on-dark); border-radius: var(--radius-md); padding: 26px 34px; }
+    .door-strip-price { font-family: var(--font-display); font-size: 1.7rem; line-height: 1.15; letter-spacing: -.02em; white-space: nowrap; }
+    .door-strip-price span { color: var(--accent); }
+    .door-strip p { margin: 0; color: var(--on-dark-muted); }
+    .door-strip p strong { color: var(--on-dark); }
+
+    .included-layout { display: grid; grid-template-columns: .85fr 1.15fr; gap: 90px; align-items: start; }
+    .included-copy { position: sticky; top: 110px; }
+    .included-copy .lead { margin-bottom: 0; }
+    .checklist { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
+    .checklist li { display: grid; grid-template-columns: 38px 1fr; gap: 17px; align-items: start; padding: 24px 0; border-bottom: 1px solid var(--line); font-size: 1.08rem; font-weight: 600; }
+    .check-icon { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-strong); margin-top: 1px; }
+    .check-icon svg { width: 15px; height: 15px; stroke-width: 2.5; }
+
+    .care-panel { display: grid; grid-template-columns: .75fr 1.25fr; gap: 60px; align-items: center; color: var(--on-dark); background: var(--dark); padding: 58px 64px; border-radius: var(--radius-lg); }
+    .care-panel h2 { margin: 0; font-size: clamp(2.2rem, 4vw, 3.6rem); }
+    .care-panel p { color: var(--on-dark-muted); font-size: 1.12rem; margin: 0; padding-left: 60px; border-left: 1px solid rgba(255,255,255,.16); }
+
+    .experience-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 70px; align-items: start; }
+    .experience-points { list-style: none; margin: 32px 0 0; padding: 0; }
+    .experience-points li { padding: 17px 0; border-bottom: 1px solid var(--line); }
+    .experience-points li:first-child { border-top: 1px solid var(--line); }
+    .experience-points strong { display: block; margin-bottom: 4px; font-size: 1.05rem; }
+    .experience-points span { color: var(--muted); }
+
+    .demo-shell { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+    .demo-bar { display: flex; align-items: center; gap: 14px; padding: 13px 20px; border-bottom: 1px solid var(--line); background: var(--surface-muted); }
+    .demo-dots { display: flex; gap: 7px; flex: 0 0 auto; }
+    .demo-dots span { width: 11px; height: 11px; border-radius: 50%; background: var(--line); }
+    .demo-url { font-size: .82rem; font-weight: 600; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .demo-tag { margin-left: auto; flex: 0 0 auto; font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-strong); background: var(--accent-soft); padding: 5px 10px; border-radius: 999px; }
+    .demo-body { padding: 32px; }
+    .demo-greeting { font-family: var(--font-display); font-size: 1.55rem; line-height: 1.2; margin-bottom: 4px; }
+    .demo-sub { color: var(--muted); margin-bottom: 24px; }
+    .demo-courses { display: grid; gap: 14px; }
+    .demo-course { display: grid; grid-template-columns: 1fr auto; gap: 5px 20px; align-items: center; border: 1px solid var(--line); border-radius: var(--radius-md); padding: 18px 20px; }
+    .demo-course strong { font-size: 1.02rem; }
+    .demo-meta { color: var(--muted); font-size: .86rem; }
+    .demo-progress { grid-column: 1 / -1; height: 8px; border-radius: 999px; background: var(--surface-muted); overflow: hidden; margin-top: 8px; }
+    .demo-progress span { display: block; height: 100%; background: var(--accent-strong); border-radius: 999px; }
+    .demo-resume { grid-row: 1 / span 2; grid-column: 2; align-self: center; font-weight: 700; font-size: .84rem; color: var(--accent-strong); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; white-space: nowrap; }
+    .demo-note { color: var(--muted); font-size: .9rem; margin: 20px 0 0; }
+
+    .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px; }
+    .why-item { border-top: 2px solid var(--accent-strong); padding-top: 22px; }
+    .why-item h3 { font-size: 1.15rem; margin-bottom: 10px; }
+    .why-item p { color: var(--muted); margin-bottom: 0; }
+
+    .costs-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 18px; align-items: stretch; }
+    .cost-panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 34px; display: flex; flex-direction: column; }
+    .cost-panel.dark { background: var(--dark); color: var(--on-dark); border-color: var(--dark); }
+    .cost-panel h3 { font-size: 1.3rem; margin-bottom: 6px; }
+    .cost-who { color: var(--muted); margin-bottom: 10px; }
+    .cost-panel.dark .cost-who { color: var(--on-dark-muted); }
+    .plan-row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 15px 0; border-top: 1px solid var(--line); }
+    .plan-row:first-of-type { margin-top: 14px; }
+    .cost-panel.dark .plan-row { border-color: rgba(255,255,255,.15); }
+    .plan-name { font-weight: 700; display: block; }
+    .plan-detail { color: var(--muted); font-size: .88rem; display: block; }
+    .cost-panel.dark .plan-detail { color: var(--on-dark-muted); }
+    .plan-price { font-family: var(--font-display); font-size: 1.55rem; white-space: nowrap; letter-spacing: -.02em; }
+    .plan-price small { font-family: var(--font-sans); font-size: .82rem; color: var(--muted); letter-spacing: 0; }
+    .cost-panel.dark .plan-price small { color: var(--on-dark-muted); }
+    .cost-includes { color: var(--muted); margin: auto 0 0; padding-top: 22px; }
+    .cost-panel.dark .cost-includes { color: var(--on-dark-muted); }
+    .costs-footnote { color: var(--muted); margin: 22px 0 0; max-width: 760px; }
+
+    .faq-layout { display: grid; grid-template-columns: .7fr 1.3fr; gap: 100px; align-items: start; }
+    .faq-layout .section-head { position: sticky; top: 110px; margin: 0; }
+    .faq-list { border-top: 1px solid var(--line); }
+    .faq-item { border-bottom: 1px solid var(--line); }
+    .faq-question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 25px 0;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      text-align: left;
+      font-size: 1.08rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .faq-icon { width: 28px; height: 28px; position: relative; flex: 0 0 auto; border: 1px solid var(--line); border-radius: 50%; }
+    .faq-icon::before, .faq-icon::after { content: ""; position: absolute; top: 50%; left: 50%; width: 10px; height: 1.5px; background: currentColor; transform: translate(-50%, -50%); transition: transform .2s ease; }
+    .faq-icon::after { transform: translate(-50%, -50%) rotate(90deg); }
+    .faq-question[aria-expanded="true"] .faq-icon::after { transform: translate(-50%, -50%) rotate(0); }
+    .faq-answer { overflow: hidden; }
+    .faq-answer[hidden] { display: none; }
+    .faq-answer p { color: var(--muted); padding: 0 52px 25px 0; margin: 0; }
+    .faq-answer a { color: var(--accent-strong); font-weight: 700; text-underline-offset: 3px; overflow-wrap: anywhere; }
+
+    .final-cta { padding: 96px 0; background: var(--accent); color: var(--accent-ink); }
+    .final-cta-inner { display: flex; justify-content: space-between; align-items: center; gap: 50px; }
+    .final-cta h2 { max-width: 760px; margin: 0; font-size: clamp(2.6rem, 5vw, 5rem); }
+    .final-cta .button { background: var(--dark); color: var(--on-dark); min-width: 210px; }
+    .final-cta .button:hover { background: #263129; }
+
+    .signup-section { padding: 112px 0; }
+    .signup-shell { display: grid; grid-template-columns: .75fr 1.25fr; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+    .signup-copy { background: var(--dark); color: var(--on-dark); padding: 58px 52px; }
+    .signup-copy .section-label { color: var(--accent); }
+    .signup-copy h2 { font-size: clamp(2.5rem, 4vw, 4rem); }
+    .signup-copy p { color: var(--on-dark-muted); margin-bottom: 34px; }
+    .signup-points { list-style: none; margin: 0; padding: 0; }
+    .signup-points li { display: flex; gap: 12px; align-items: center; padding: 10px 0; color: var(--on-dark-muted); font-size: .95rem; }
+    .signup-points li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: 0 0 auto; }
+    .signup-form-wrap { padding: 58px 60px; }
+    .field { margin-bottom: 22px; }
+    label { display: block; font-weight: 700; font-size: .9rem; margin-bottom: 8px; }
+    input {
+      width: 100%;
+      height: 54px;
+      padding: 0 15px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--page);
+      color: var(--ink);
+    }
+    input::placeholder { color: var(--muted); opacity: .7; }
+    .signup-form-wrap .button { width: 100%; margin-top: 6px; }
+    .signup-form-wrap .button:disabled { cursor: wait; opacity: .72; transform: none; }
+    .form-status { min-height: 1.5em; margin: 13px 0 0; color: #b63c36; font-size: .88rem; font-weight: 600; text-align: center; }
+    .form-status:empty { min-height: 0; margin: 0; }
+    .form-confirmation { padding: 24px; background: var(--accent-soft); color: var(--ink); border-radius: var(--radius-sm); font-size: 1.08rem; font-weight: 700; }
+
+    @media (prefers-color-scheme: dark) {
+      .form-status { color: #ff9b94; }
+    }
+
+    footer { border-top: 1px solid var(--line); padding: 30px 0; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 24px; color: var(--muted); font-size: .88rem; }
+    .footer-inner p { margin: 0; }
+    .footer-inner a { color: var(--ink); font-weight: 700; text-underline-offset: 3px; }
+
+    @media (max-width: 900px) {
+      .section { padding: 82px 0; }
+      .hero { min-height: auto; }
+      .hero-grid { grid-template-columns: 1fr; gap: 58px; }
+      .hero-proof { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+      .proof-item { display: block; }
+      .proof-number { margin-bottom: 12px; }
+      .steps { grid-template-columns: 1fr; }
+      .step, .step:first-child, .step:last-child { padding: 30px 0; border-right: 0; border-bottom: 1px solid var(--line); }
+      .step:last-child { border-bottom: 0; }
+      .step-num { margin-bottom: 20px; }
+      .pricing-head-row { align-items: start; flex-direction: column; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .price-card { min-height: 260px; }
+      .included-layout, .faq-layout { grid-template-columns: 1fr; gap: 50px; }
+      .experience-layout, .costs-grid { grid-template-columns: 1fr; gap: 44px; }
+      .why-grid { grid-template-columns: 1fr; gap: 26px; }
+      .included-copy, .faq-layout .section-head { position: static; }
+      .care-panel { grid-template-columns: 1fr; padding: 48px; gap: 30px; }
+      .care-panel p { padding: 28px 0 0; border-left: 0; border-top: 1px solid rgba(255,255,255,.16); }
+      .final-cta-inner { align-items: flex-start; flex-direction: column; }
+      .signup-shell { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 660px) {
+      .container { width: min(100% - 28px, 1160px); }
+      .section { padding: 68px 0; }
+      .section-head { margin-bottom: 38px; }
+      .hero { border-radius: 0 0 26px 26px; }
+      .nav { height: 72px; min-height: 0; gap: 12px; flex-wrap: nowrap; }
+      .nav-toggle { display: inline-flex; }
+      .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; padding: 12px 4px 18px; background: var(--dark-2); border-bottom: 1px solid rgba(255,255,255,.11); }
+      .nav-links.open { display: flex; }
+      .nav-links > a:not(.button) { padding: 11px 6px; font-size: .95rem; }
+      .nav-links .button { margin-top: 10px; }
+      .demo-body { padding: 24px 20px; }
+      .demo-course { grid-template-columns: 1fr; }
+      .demo-resume { grid-row: auto; grid-column: 1; justify-self: start; margin-top: 8px; }
+      .cost-panel { padding: 28px 24px; }
+      .wordmark { font-size: 1.45rem; }
+      .hero-inner { padding: 62px 0 78px; }
+      h1 { font-size: clamp(3rem, 14vw, 4.2rem); }
+      .hero h1 .price { white-space: normal; }
+      .hero-actions { align-items: flex-start; flex-direction: column; }
+      .hero-actions .button { width: 100%; }
+      .hero-proof { grid-template-columns: 1fr; gap: 0; }
+      .proof-item { display: grid; }
+      .proof-number { margin-bottom: 0; }
+      .pricing-grid { gap: 14px; }
+      .door-strip { flex-direction: column; align-items: flex-start; gap: 10px; padding: 24px; }
+      .door-strip-price { white-space: normal; }
+      .price-card { padding: 28px 24px; }
+      .price { font-size: 3.7rem; margin-top: 34px; }
+      .included-layout { gap: 36px; }
+      .care-panel { padding: 36px 28px; border-radius: var(--radius-md); }
+      .faq-layout { gap: 28px; }
+      .faq-answer p { padding-right: 0; }
+      .final-cta { padding: 70px 0; }
+      .final-cta .button { width: 100%; }
+      .signup-section { padding: 70px 0; }
+      .signup-shell { border-radius: var(--radius-md); }
+      .signup-copy, .signup-form-wrap { padding: 38px 24px; }
+      .footer-inner { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav container" aria-label="Primary navigation">
+      <a class="wordmark" href="#top" aria-label="ClassDismissed home">Class<span>Dismissed</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div class="nav-links" id="nav-links">
+        <a href="#how-it-works">How it works</a>
+        <a href="#experience">Student experience</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#costs">Costs</a>
+        <a href="#faq">FAQ</a>
+        <a class="button" href="#signup">Request review</a>
+      </div>
+    </nav>
+
+    <div class="hero-inner container" id="top">
+      <div class="hero-kicker">Pay after you approve the finished site</div>
+      <h1>Your $2,000–$5,000 Teachable rebuild — done for <span class="price">$997.</span></h1>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p>It starts with your Teachable school URL: we reply within one business day with exactly what will and won't move. Say go, and we rebuild your entire course business on a private Podia staging site — your Teachable school stays live the whole time. Approve the finished site and choose how to pay — $997 once, or $199/mo on the plan — or walk away and pay nothing.</p>
+          <div class="hero-actions">
+            <a class="button" href="#signup">
+              Request my migration review
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+            </a>
+            <p class="hero-trust">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+              You pay nothing until you approve the finished rebuild.
+            </p>
+          </div>
+        </div>
+        <aside class="hero-proof" aria-label="Rebuild process summary">
+          <div class="proof-item"><span class="proof-number">01</span><div><strong>Migration review</strong><span>Reply within one business day</span></div></div>
+          <div class="proof-item"><span class="proof-number">02</span><div><strong>You say go, we rebuild</strong><span>Private staging — Teachable stays live</span></div></div>
+          <div class="proof-item"><span class="proof-number">03</span><div><strong>Approve the finished site</strong><span>$997 once, or $199/mo on the plan — or walk away, pay nothing</span></div></div>
+        </aside>
+      </div>
+    </div>
+  </header>
+
+  <div class="founder-note">
+    <div class="container">
+      <p><strong>I'm Sam, the founder of ClassDismissed — and I do the rebuilds myself.</strong> These are my first five founding rebuilds. The private staging site is the proof: you judge the finished work before you pay anything.</p>
+    </div>
+  </div>
+
+  <main>
+    <section class="section" id="how-it-works">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">How it works</p>
+          <h2>Move beyond Teachable, without the usual disruption.</h2>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <div class="step-num">01</div>
+            <h3>Request your review</h3>
+            <p>Send us your name, email, and Teachable school URL. Within one business day, we reply with exactly what will and won't move — no call required, and nothing is built yet.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">02</div>
+            <h3>You say go, we rebuild</h3>
+            <p>Only once you say go do we start: your courses, quizzes, drip schedules, compliance rules, student progress, offers, contacts, and automations rebuilt on Podia, on a private staging site matched to your brand. Your Teachable school stays live the whole time.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">03</div>
+            <h3>Approve → choose how to pay → cutover</h3>
+            <p>Review the finished rebuild. Approve it, choose how to pay — $997 once, or $199/mo on the plan — and we cut over your live site. Don't love it? Walk away, pay nothing, and your live site is untouched.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="migration-difference-title">
+      <div class="container">
+        <div class="care-panel">
+          <h2 id="migration-difference-title">Podia's free migration moves your files; we move your whole business.</h2>
+          <p>Podia's free migration service skips your quizzes, drip schedules, and student progress. Our rebuild moves all of it — that's the difference between landing on Podia and landing on Podia intact.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="experience">
+      <div class="container experience-layout">
+        <div>
+          <p class="section-label">The student experience</p>
+          <h2>Their progress comes with them. Nobody starts over.</h2>
+          <p class="lead">Your students' progress and drip schedules move with them: completed lessons stay completed, drip timing stays on schedule, and everyone picks up exactly where they left off.</p>
+          <ul class="experience-points">
+            <li><strong>One login for everything</strong><span>Courses, community, and membership behind a single student login on Podia — no juggling links, no second account.</span></li>
+            <li><strong>Pick up on any device</strong><span>A lesson started on a laptop resumes in the same place on a phone — in the browser or the app.</span></li>
+            <li><strong>Everything under your brand</strong><span>Your domain, your design, your checkout. Students stay inside your business instead of bouncing between tools.</span></li>
+          </ul>
+        </div>
+        <div>
+          <div class="demo-shell" role="img" aria-label="Demonstration of a rebuilt student dashboard on Podia: a course at 68 percent complete with a resume button, a drip-scheduled program, and a members community, all behind one login.">
+            <div class="demo-bar" aria-hidden="true">
+              <span class="demo-dots"><span></span><span></span><span></span></span>
+              <span class="demo-url">yourcourse.podia.com</span>
+              <span class="demo-tag">Demonstration</span>
+            </div>
+            <div class="demo-body" aria-hidden="true">
+              <p class="demo-greeting">Welcome back, Alex</p>
+              <p class="demo-sub">Everything you own, in one place.</p>
+              <div class="demo-courses">
+                <div class="demo-course">
+                  <strong>Signature Program</strong>
+                  <span class="demo-resume">Resume lesson</span>
+                  <span class="demo-meta">Module 4 of 6 · Next: Pricing your work</span>
+                  <div class="demo-progress"><span style="width:68%"></span></div>
+                </div>
+                <div class="demo-course">
+                  <strong>Foundations Course</strong>
+                  <span class="demo-resume">Continue</span>
+                  <span class="demo-meta">Drip schedule on track · Week 3 unlocks Friday</span>
+                  <div class="demo-progress"><span style="width:34%"></span></div>
+                </div>
+                <div class="demo-course">
+                  <strong>Members Community</strong>
+                  <span class="demo-resume">Open</span>
+                  <span class="demo-meta">Same login · New posts since your last visit</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="demo-note">Demonstration: this is a sample course business rebuilt to show the student view — not a client site. Your rebuild is matched to your brand and your actual courses, quizzes, and students.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="why-switch" style="padding-top:0">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">Why switch</p>
+          <h2>The monthly bill drops too — and someone runs the tech.</h2>
+          <p class="lead">Honest math first: on Teachable Starter ($39/mo), every sale also costs you 7.5% — a creator selling $3,000/mo pays $264/mo all-in. On Podia Shaker plus our care plan that's $178/mo — $86/mo back, with someone running the tech for you, and that fee only grows with your sales. The bigger saving is still one-time: the rebuild, $997 instead of $2,000–$5,000. What also changes every month is how your business runs.</p>
+        </div>
+        <div class="why-grid">
+          <article class="why-item">
+            <h3>Everything is in the one plan</h3>
+            <p>Every Podia plan includes your website, courses, community, and email marketing. No add-on stack, and no paying for a higher tier just to unlock a basic feature.</p>
+          </article>
+          <article class="why-item">
+            <h3>Simpler to run day to day</h3>
+            <p>One dashboard for products, students, and email, instead of a platform that grew by bolting on features. Less time administering, more time teaching and selling.</p>
+          </article>
+          <article class="why-item">
+            <h3>No annual lock-in</h3>
+            <p>Podia bills month to month. If pricing or features ever stop working for you, leaving is a decision you can act on — not a renewal you're trapped in for another year.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section pricing-section" id="pricing">
+      <div class="container">
+        <div class="pricing-head-row">
+          <div class="section-head">
+            <p class="section-label">Pricing</p>
+            <h2>The same full rebuild. Earlier clients pay less.</h2>
+          </div>
+          <p class="pricing-note">One-time. You pay only after you approve the finished rebuild.</p>
+        </div>
+        <div class="pricing-grid">
+          <article class="price-card featured">
+            <div class="price-topline">
+              <span class="tier">Founding</span>
+              <span class="spots">Founding cohort</span>
+            </div>
+            <div class="price">$997</div>
+            <p class="price-sub">Five founding rebuilds at this price</p>
+            <p class="price-foot">One-time. You pay only after you approve the finished rebuild.</p>
+          </article>
+          <article class="price-card">
+            <div class="price-topline"><span class="tier">Early</span></div>
+            <div class="price">$1,499</div>
+            <p class="price-sub">The next ten rebuilds, after the founding five</p>
+            <p class="price-foot">One-time. You pay only after you approve the finished rebuild.</p>
+          </article>
+          <article class="price-card">
+            <div class="price-topline"><span class="tier">Standard</span></div>
+            <div class="price">$2,000</div>
+            <p class="price-sub">Standard rate</p>
+            <p class="price-foot">One-time. You pay only after you approve the finished rebuild.</p>
+          </article>
+        </div>
+        <div class="door-strip">
+          <div class="door-strip-price">Or: <span>$0 upfront</span>, $199/mo</div>
+          <p><strong>The second way to pay for the rebuild.</strong> $199/month for 24 months, care plan included. You agree when you approve the finished staging site — and if you leave early, the unpaid rebuild balance comes due.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="included">
+      <div class="container included-layout">
+        <div class="included-copy">
+          <p class="section-label">What's included</p>
+          <h2>Your course business, rebuilt—not just copied.</h2>
+        </div>
+        <ul class="checklist" aria-label="What's included">
+          <li><span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><span>Full course content — modules, lessons, videos</span></li>
+          <li><span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><span>Quizzes and assessments rebuilt</span></li>
+          <li><span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><span>Drip schedules preserved</span></li>
+          <li><span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><span>Student progress carried over</span></li>
+          <li><span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><span>Offers and pricing rebuilt</span></li>
+          <li><span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><span>Email automations rebuilt</span></li>
+          <li><span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><span>Contacts migrated</span></li>
+          <li><span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><span>Design matched to your brand</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="costs">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">Ongoing costs</p>
+          <h2>What you pay after the move — and who you pay it to.</h2>
+          <p class="lead">Two separate things, billed by two separate companies. The one-time rebuild fee is neither of them.</p>
+        </div>
+        <div class="costs-grid">
+          <article class="cost-panel">
+            <h3>Your Podia subscription</h3>
+            <p class="cost-who">Paid directly to Podia. We don't mark it up and we don't bill it.</p>
+            <div class="plan-row">
+              <span><span class="plan-name">Mover</span><span class="plan-detail">Takes 5% of every sale — about $400 on a $7,997 course · 100 email subscribers included</span></span>
+              <span class="plan-price">$49<small>/mo</small></span>
+            </div>
+            <div class="plan-row">
+              <span><span class="plan-name">Shaker</span><span class="plan-detail">0% transaction fees · 500 email subscribers included</span></span>
+              <span class="plan-price">$99<small>/mo</small></span>
+            </div>
+            <div class="plan-row">
+              <span><span class="plan-name">Earthquaker</span><span class="plan-detail">0% transaction fees · 1,000 email subscribers included</span></span>
+              <span class="plan-price">$179<small>/mo</small></span>
+            </div>
+            <p class="cost-includes">Every plan includes your website, course hosting, community, and checkout, billed month to month. Email marketing is included up to the subscriber cap on your plan — past the cap, you pay Podia for a larger list.</p>
+          </article>
+          <article class="cost-panel dark">
+            <h3>ClassDismissed care plan — optional</h3>
+            <p class="cost-who">Paid to ClassDismissed, only if you want it. One plan — you never touch the tech again.</p>
+            <div class="plan-row">
+              <span><span class="plan-name">Care plan</span><span class="plan-detail">First 30 days after cutover free · price locked for 24 months · cancel anytime</span></span>
+              <span class="plan-price">$79<small>/mo</small></span>
+            </div>
+            <div class="plan-row">
+              <span><span class="plan-name">Student access problems, fixed for you</span><span class="plan-detail">Logins and lost progress — handled, not queued with Podia support</span></span>
+            </div>
+            <div class="plan-row">
+              <span><span class="plan-name">Small fixes &amp; settings changes</span><span class="plan-detail">Prices, coupons, links, formatting</span></span>
+            </div>
+            <div class="plan-row">
+              <span><span class="plan-name">New lessons built in for you</span><span class="plan-detail">Up to 5 a month — you send the files, we build them in</span></span>
+            </div>
+            <div class="plan-row">
+              <span><span class="plan-name">Checkout tested before a launch</span><span class="plan-detail">Tested end to end before your launch goes live</span></span>
+            </div>
+            <p class="cost-includes">Podia Shaker ($99) + this plan ($79) = $178/mo total — $86/mo less than Teachable Starter at $3,000/mo in sales ($264), with someone running it for you. Your site runs fine without it.</p>
+          </article>
+        </div>
+        <p class="costs-footnote">Separate from both: the rebuild itself. Pay $997 once at the founding rate, only after you approve the finished staging site — or $0 upfront and $199/mo for 24 months with the care plan included, agreed at that same approval.</p>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="container faq-layout">
+        <div class="section-head">
+          <p class="section-label">FAQ</p>
+          <h2>Before you make the move.</h2>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="true" aria-controls="faq-1"><span>What transfers?</span><span class="faq-icon" aria-hidden="true"></span></button>
+            <div class="faq-answer" id="faq-1"><p>Your course content, modules, lessons, videos, quizzes, offers, pricing, contacts, and email automations — all rebuilt on Podia, design matched to your brand. Drip schedules keep their timing and your students' progress carries over, so they pick up right where they left off.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-6"><span>Where does my course move to?</span><span class="faq-icon" aria-hidden="true"></span></button>
+            <div class="faq-answer" id="faq-6" hidden><p>Podia. Your website, courses, community, and email all run there under your own brand and domain, and your students keep a single login for everything they own. See <a href="#experience">the student experience</a> for how it looks from their side.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-2"><span>How long does it take?</span><span class="faq-icon" aria-hidden="true"></span></button>
+            <div class="faq-answer" id="faq-2" hidden><p>Most rebuilds are done within two weeks of you granting access.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-3"><span>What if I don't like the rebuild?</span><span class="faq-icon" aria-hidden="true"></span></button>
+            <div class="faq-answer" id="faq-3" hidden><p>You pay nothing. We shut down the staging server and your live Teachable school is completely untouched.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-4"><span>Do I need to talk to anyone?</span><span class="faq-icon" aria-hidden="true"></span></button>
+            <div class="faq-answer" id="faq-4" hidden><p>No. The whole process is async: request your review, say go once you've seen what will and won't move, review the finished staging site, then approve and pay. If you'd rather talk it through, you can book a 15-minute intro call here: <!-- TODO: this Calendly event (sam-tryexitramp/exitramp-intro-chat) is the ExitRamp one — confirm or create a ClassDismissed event before launch. --><a href="https://calendly.com/sam-tryexitramp/exitramp-intro-chat" target="_blank" rel="noopener noreferrer">https://calendly.com/sam-tryexitramp/exitramp-intro-chat</a></p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-5"><span>What about my monthly costs?</span><span class="faq-icon" aria-hidden="true"></span></button>
+            <div class="faq-answer" id="faq-5" hidden><p>Podia Shaker is $99/mo. Add the optional $79/mo care plan and the total is $178/mo — versus $264/mo for a Teachable Starter creator selling $3,000/mo ($39 + 7.5% of every sale), that's $86/mo less, with no fees on future sales and no more waiting up to 45 days for payouts — Podia pays you immediately through your own Stripe. On Teachable Builder ($89/mo with 0% transaction fees), the Podia-plus-care total is higher — the fee-elimination case is aimed at Starter sellers. What your Podia subscription includes, plan by plan, is broken down under <a href="#costs">ongoing costs</a>.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta" aria-labelledby="final-cta-title">
+      <div class="container final-cta-inner">
+        <h2 id="final-cta-title">Your rebuild costs you nothing until you approve the finished site.</h2>
+        <a class="button" href="#signup">Request my migration review</a>
+      </div>
+    </section>
+
+    <section class="signup-section" id="signup">
+      <div class="container signup-shell">
+        <div class="signup-copy">
+          <p class="section-label">Get started</p>
+          <h2>Request your migration review</h2>
+          <p>Tell us where your course lives. We'll review your setup and reply within one business day with exactly what will and won't move. Nothing is built until you say go, and nothing is billed until you approve the finished rebuild.</p>
+          <ul class="signup-points">
+            <li>Reply within one business day — what will and won't move</li>
+            <li>Nothing built until you say go</li>
+            <li>Pay only after you approve the finished site</li>
+          </ul>
+        </div>
+        <div class="signup-form-wrap">
+          <form id="rebuild-form">
+            <div class="field">
+              <label for="name">Full name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="site">Teachable school URL</label>
+              <input id="site" name="site" type="url" inputmode="url" autocomplete="url" placeholder="https://yourcourse.teachable.com" />
+            </div>
+            <button class="button" type="submit">Request my migration review</button>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          </form>
+          <div class="form-confirmation" id="form-confirmation" role="status" aria-live="polite" hidden>
+            Got it — we'll reply within one business day with what will and won't move. Nothing is built until you say go.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <p>© 2026 ClassDismissed. All rights reserved.</p>
+      <!-- TODO: this Calendly event (sam-tryexitramp/exitramp-intro-chat) is the ExitRamp one — confirm or create a ClassDismissed event before launch. --><a href="https://calendly.com/sam-tryexitramp/exitramp-intro-chat" target="_blank" rel="noopener noreferrer">Prefer to talk? Book a 15-minute intro call.</a>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const INTAKE_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxT2DBl_Td1OS1FURAtPijvb594hgfXB9PE4VbohtXMEqqydVmYTvGr2diSW-GDPp_NGw/exec'; // TODO: swap this for the ClassDismissed Apps Script intake endpoint before launch — currently the ExitRamp endpoint.
+
+      var navToggle = document.querySelector('.nav-toggle');
+      var navLinks = document.getElementById('nav-links');
+      navToggle.addEventListener('click', function () {
+        var open = navLinks.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', String(open));
+        navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      });
+      navLinks.addEventListener('click', function (event) {
+        if (event.target.closest('a')) {
+          navLinks.classList.remove('open');
+          navToggle.setAttribute('aria-expanded', 'false');
+          navToggle.setAttribute('aria-label', 'Open menu');
+        }
+      });
+
+      var questions = document.querySelectorAll('.faq-question');
+      questions.forEach(function (button) {
+        button.addEventListener('click', function () {
+          var panel = document.getElementById(button.getAttribute('aria-controls'));
+          var willOpen = button.getAttribute('aria-expanded') !== 'true';
+          questions.forEach(function (other) {
+            var otherPanel = document.getElementById(other.getAttribute('aria-controls'));
+            other.setAttribute('aria-expanded', 'false');
+            otherPanel.hidden = true;
+          });
+          button.setAttribute('aria-expanded', String(willOpen));
+          panel.hidden = !willOpen;
+        });
+      });
+
+      var form = document.getElementById('rebuild-form');
+      var status = document.getElementById('form-status');
+      var confirmation = document.getElementById('form-confirmation');
+      var submitButton = form.querySelector('button[type="submit"]');
+
+      form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        status.textContent = '';
+
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        if (!INTAKE_ENDPOINT) {
+          status.textContent = "Form isn't connected yet — email sam@getclassdismissed.com directly.";
+          return;
+        }
+
+        var payload = {
+          name: document.getElementById('name').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          site: document.getElementById('site').value.trim()
+        };
+
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending…';
+
+        try {
+          var response = await fetch(INTAKE_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          var result = await response.json();
+          if (!response.ok || !result || result.ok !== true) {
+            throw new Error('Intake request failed');
+          }
+          form.hidden = true;
+          confirmation.hidden = false;
+          confirmation.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } catch (error) {
+          status.textContent = 'Something went wrong — email sam@getclassdismissed.com directly.';
+          submitButton.disabled = false;
+          submitButton.textContent = 'Request my migration review';
+        }
+      });
+    }());
+  </script>
+
+  <!-- Cloudflare Web Analytics -->
+  <!-- End Cloudflare Web Analytics -->
+</body>
+</html>
